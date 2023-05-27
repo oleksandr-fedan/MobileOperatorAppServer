@@ -1,0 +1,49 @@
+﻿@model MobileOperatorAppServer.Utils.Pager
+@using System.Diagnostics
+
+@{
+    string currentController = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<div class="container-fluid">
+    @if (Model.TotalPages > 1)
+    {
+        Debug.WriteLine(Model.TotalPages);
+        <ul class="pagination justify-content-end">
+            
+            @if (Model.CurrentPage > 1)
+            {
+                @if (Model.TotalPages > 2)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-controller="@currentController" asp-action="Index" asp-route-page="1">Перша</a>
+                    </li>
+                }
+                <li>
+                    <a class="page-link" asp-controller="@currentController" asp-action="Index" asp-route-page="@(Model.CurrentPage - 1)">Попередня</a>
+                </li>
+            }
+
+            @for (var pg = Model.StartPage; pg <= Model.EndPage ; pg++)
+            {
+                <li class="page-item @(pg == Model.CurrentPage ? "active": "")">
+                    <a class="page-link" asp-controller="@currentController" asp-action="Index" asp-route-page="@pg">@pg</a>
+                </li>
+            }
+
+            @if (Model.CurrentPage < Model.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-controller="@currentController" asp-action="Index" asp-route-page="@(Model.CurrentPage + 1)">Наступна</a>
+                </li>
+
+                @if (Model.TotalPages > 2)
+                {
+                    <li>
+                        <a class="page-link" asp-controller="@currentController" asp-action="Index" asp-route-page="@(Model.TotalPages)">Остання</a>
+                    </li>
+                }
+            }
+        </ul>
+    }
+</div>

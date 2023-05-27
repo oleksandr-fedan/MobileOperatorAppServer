@@ -1,0 +1,100 @@
+﻿@{
+    Pager pager = new Pager();
+
+    if (ViewBag.Pager != null)
+    {
+        pager = ViewBag.Pager;
+    }
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <h2>Підключені послуги за номером +380 @Model.User.PhoneNumber</h2>
+        <div class="col-12">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Назва</th>
+                        <th scope="col">Опис</th>
+                        <th scope="col">Ціна</th>
+                        <th scope="col">Інтернет</th>
+                        <th scope="col">Хвилини</th>
+                        <th scope="col">Хв. на інших операторів</th>
+                        <th scope="col">SMS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var activity in Model.Services)
+                    {
+                        <tr>
+                            <th class="align-middle" scope="row">@activity.Id</th>
+                            <td class="align-middle">
+                                <span class="field">@activity.Name</span>
+                            </td>
+                            <td class="align-middle">
+                                <span class="field">@activity.Description</span>
+                            </td>
+                            <td class="align-middle">
+                                <span class="field">@activity.Price</span>
+                            </td>
+                            <td class="align-middle">
+                                <span class="field">@activity.InternetQuantity</span>
+                            </td>
+                            <td class="align-middle">
+                                <span class="field">@activity.MinutesQuantity</span>
+                            </td>
+                            <td class="align-middle">
+                                <span class="field">@activity.OtherMinutesQuantity</span>
+                            </td>
+                            <td class="align-middle">
+                                <span class="field">@activity.SMSQuantity</span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="container-fluid">
+                @if (pager.TotalPages > 1)
+                {
+                    <ul class="pagination justify-content-end">
+
+                        @if (pager.CurrentPage > 1)
+                        {
+                            @if (pager.TotalPages > 2)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" asp-controller="User" asp-action="Services" asp-route-id="@Model.User.Id" asp-route-page="1">Перша</a>
+                                </li>
+                            }
+                            <li>
+                                <a class="page-link" asp-controller="User" asp-action="Services" asp-route-id="@Model.User.Id" asp-route-page="@(pager.CurrentPage - 1)">Попередня</a>
+                            </li>
+                        }
+
+                        @for (var pg = pager.StartPage; pg <= pager.EndPage; pg++)
+                        {
+                            <li class="page-item @(pg == pager.CurrentPage ? "active": "")">
+                                <a class="page-link" asp-controller="User" asp-action="Services" asp-route-id="@Model.User.Id" asp-route-page="@pg">@pg</a>
+                            </li>
+                        }
+
+                        @if (pager.CurrentPage < pager.TotalPages)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-controller="User" asp-action="Services" asp-route-id="@Model.User.Id" asp-route-page="@(pager.CurrentPage + 1)">Наступна</a>
+                            </li>
+
+                            @if (pager.TotalPages > 2)
+                            {
+                                <li>
+                                    <a class="page-link" asp-controller="User" asp-action="Services" asp-route-id="@Model.User.Id" asp-route-page="@(pager.TotalPages)">Остання</a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+</div>

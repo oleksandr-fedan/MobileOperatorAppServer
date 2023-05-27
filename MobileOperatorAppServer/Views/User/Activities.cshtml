@@ -1,0 +1,112 @@
+﻿@{
+    Pager pager = new Pager();
+
+    if (ViewBag.Pager != null)
+    {
+        pager = ViewBag.Pager;
+    }
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <h2>Активність за номером +380 @Model.User.PhoneNumber</h2>
+        <div class="col-12">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Тип</th>
+                        <th scope="col">Кількість</th>
+                        <th scope="col">Дата</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var activity in Model.Activities)
+                    {
+                        <tr>
+                            <th class="align-middle" scope="row">@activity.Id</th>
+                            <td class="align-middle">
+                                <span class="field">@activity.Type</span>
+                            </td>
+                            <td class="align-middle">
+                                <span class="field">@activity.Quantity</span>
+                            </td>
+                            <td class="align-middle">
+                                <span class="field">@activity.Date.ToString("d")</span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="container-fluid">
+                @if (pager.TotalPages > 1)
+                {
+                    <ul class="pagination justify-content-end">
+
+                        @if (pager.CurrentPage > 1)
+                        {
+                            @if (pager.TotalPages > 2)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" asp-controller="User" asp-action="Activities" asp-route-id="@Model.User.Id" asp-route-page="1">Перша</a>
+                                </li>
+                            }
+                            <li>
+                                <a class="page-link" asp-controller="User" asp-action="Activities" asp-route-id="@Model.User.Id" asp-route-page="@(pager.CurrentPage - 1)">Попередня</a>
+                            </li>
+                        }
+
+                        @for (var pg = pager.StartPage; pg <= pager.EndPage; pg++)
+                        {
+                            <li class="page-item @(pg == pager.CurrentPage ? "active": "")">
+                                <a class="page-link" asp-controller="User" asp-action="Activities" asp-route-id="@Model.User.Id" asp-route-page="@pg">@pg</a>
+                            </li>
+                        }
+
+                        @if (pager.CurrentPage < pager.TotalPages)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-controller="User" asp-action="Activities" asp-route-id="@Model.User.Id" asp-route-page="@(pager.CurrentPage + 1)">Наступна</a>
+                            </li>
+
+                            @if (pager.TotalPages > 2)
+                            {
+                                <li>
+                                    <a class="page-link" asp-controller="User" asp-action="Activities" asp-route-id="@Model.User.Id" asp-route-page="@(pager.TotalPages)">Остання</a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="card">
+                <div class="card-header">Додати активність</div>
+                <div class="card-body">
+                    <form method="post" asp-action="AddActivity">
+                        <input type="hidden" name="Id" value="@Model.User.Id" />
+                        <div class="form-group">
+                            <label>Кількість</label>
+                            <input type="text" class="form-control" name="QuantityStr" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Тариф</label>
+                            <select class="form-control" name="Type">
+                                <option value="@ActivityType.INTERNET">@ActivityType.INTERNET</option>
+                                <option value="@ActivityType.MINUTES">@ActivityType.MINUTES</option>
+                                <option value="@ActivityType.OTHER_MINUTES">@ActivityType.OTHER_MINUTES</option>
+                                <option value="@ActivityType.SMS">@ActivityType.SMS</option>
+                            </select>
+                        </div>
+                        @if (TempData.ContainsKey("ErrorMessage"))
+                        {
+                            <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+                        }
+                        <button type="submit" class="btn btn-primary btn-block">Додати</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

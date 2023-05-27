@@ -1,0 +1,165 @@
+﻿@{
+    Pager pager = new Pager();
+
+    if (ViewBag.Pager != null)
+    {
+        pager = ViewBag.Pager;
+    }
+}
+
+<div class="container-fluid">
+    <div class="row">
+        @if (TempData.ContainsKey("ErrorMessage"))
+        {
+            <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+        }
+        <div class="col-12">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Назва</th>
+                        <th scope="col">Ціна</th>
+                        <th scope="col">Інтернет</th>
+                        <th scope="col">Хвилини</th>
+                        <th scope="col">Хв. на інших операторів</th>
+                        <th scope="col">SMS</th>
+                        <th scope="col">Дії</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <form method="post" asp-action="Update">
+                        <tr>
+                            <th class="align-middle" scope="row">@item.Id</th>
+                            <input type="hidden" name="Id" value="@item.Id" />
+                            <td class="align-middle">
+                                <span class="field">@item.Name</span>
+                                <input class="input-field text-input form-control"
+                                       type="text"
+                                       value="@item.Name"
+                                       style="display:none"
+                                       name="Name" 
+                                       required/>
+                            </td>
+                            <td class="align-middle">
+                                <span class="field">@item.Price</span>
+                                <input class="input-field number-input form-control"
+                                       type="text"
+                                       value="@item.Price"
+                                       style="display:none"
+                                       name="PriceStr"
+                                       required />
+                            </td>
+                            <td class="align-middle">
+                                <span class="field">@item.InternetQuantity</span>
+                                <input class="input-field number-input form-control"
+                                       type="text"
+                                       value="@item.InternetQuantity"
+                                       style="display:none"
+                                       name="InternetQuantityStr"
+                                       required />
+                            </td>
+                            <td class="align-middle">
+                                <span class="field">@item.MinutesQuantity</span>
+                                <input class="input-field number-input form-control"
+                                       type="text"
+                                       value="@item.MinutesQuantity"
+                                       style="display:none"
+                                       name="MinutesQuantityStr"
+                                       required />
+                            </td>
+                            <td class="align-middle">
+                                <span class="field">@item.OtherMinutesQuantity</span>
+                                <input class="input-field number-input form-control"
+                                       type="text"
+                                       value="@item.OtherMinutesQuantity"
+                                       style="display:none"
+                                       name="OtherMinutesQuantityStr"
+                                       required />
+                            </td>
+                            <td class="align-middle">
+                                <span class="field">@item.SMSQuantity</span>
+                                <input class="input-field number-input form-control"
+                                       type="text"
+                                       value="@item.SMSQuantity"
+                                       style="display:none"
+                                       name="SMSQuantityStr"
+                                       required />
+                            </td>
+                            <td class="align-middle">
+                                <button type="button"
+                                        class="btn btn-primary edit-btn"
+                                        data-toggle="tooltip"
+                                        title="Редагувати запис">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button type="submit"
+                                        class="btn btn-success save-btn"
+                                        style="display: none;"
+                                        data-toggle="tooltip"
+                                        title="Зберегти зміни">
+                                    <i class="bi bi-check-lg"></i>
+                                </button>
+                                <button type="button"
+                                        class="btn btn-warning cancel-btn"
+                                        style="display: none;"
+                                        data-toggle="tooltip"
+                                        title="Відмінити">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                                <button type="submit" 
+                                        class="btn btn-danger" 
+                                        asp-action="Delete"
+                                        data-toggle="tooltip"
+                                        title="Видалити запис">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        </form>
+                    }
+                </tbody>
+            </table>
+            @{
+                await Html.RenderPartialAsync("_Pager", pager);
+            }
+        </div>
+        <div class="col-3">
+            <div class="card">
+                <div class="card-header">Додати тариф</div>
+                <div class="card-body">
+                    <form method="post" asp-action="Create">
+                        <div class="form-group">
+                            <label>Назва</label>
+                            <input type="text" class="form-control" name="Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Ціна</label>
+                            <input type="text" class="form-control" name="PriceStr" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Кількість інтернету</label>
+                            <input type="text" class="form-control" name="InternetQuantityStr" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Кількість хвилин</label>
+                            <input type="text" class="form-control" name="MinutesQuantityStr" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Кількість хвилин на інших опкраторів</label>
+                            <input type="text" class="form-control" name="OtherMinutesQuantityStr" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Кількість SMS повідомлень</label>
+                            <input type="text" class="form-control" name="SMSQuantityStr" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Додати</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<partial name="_TableScript" />

@@ -1,0 +1,172 @@
+﻿@{
+    Pager pager = new Pager();
+
+    if (ViewBag.Pager != null)
+    {
+        pager = ViewBag.Pager;
+    }
+}
+
+<div class="container-fluid">
+    <div class="row">
+        @if (TempData.ContainsKey("ErrorMessage"))
+        {
+            <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+        }
+        <div class="col-12">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Номер телефону</th>
+                        <th scope="col">Ім'я</th>
+                        <th scope="col">Прізвище</th>
+                        <th scope="col">По-батькові</th>
+                        <th scope="col">Баланс</th>
+                        <th scope="col">Дата підключення</th>
+                        <th scope="col">Id тарифу</th>
+                        <th scope="col">Дії</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Users)
+                    {
+                        <form method="post" asp-action="Update">
+                        <tr>
+                            <th class="align-middle" scope="row">@item.Id</th>
+                            <input type="hidden" name="Id" value="@item.Id" />
+                            <td class="align-middle">
+                                <span class="field">@item.PhoneNumber</span>
+                                <input class="input-field text-input"
+                                       type="text"
+                                       value="@item.PhoneNumber"
+                                       style="display:none"
+                                       name="PhoneNumber" 
+                                       required />
+                            </td>
+                            <td class="align-middle">
+                                <span class="field">@item.Name</span>
+                                <input class="input-field text-input"
+                                       type="text"
+                                       value="@item.Name"
+                                       style="display:none"
+                                       name="Name" 
+                                       required />
+                            </td>
+                            <td class="align-middle">
+                                <span class="field">@item.Surname</span>
+                                <input class="input-field text-input"
+                                       type="text"
+                                       value="@item.Surname"
+                                       style="display:none"
+                                       name="Surname" 
+                                       required />
+                            </td>
+                            <td class="align-middle">
+                                <span class="field">@item.MiddleName</span>
+                                <input class="input-field text-input"
+                                       type="text"
+                                       value="@item.MiddleName"
+                                       style="display:none"
+                                       name="MiddleName" 
+                                       required />
+                            </td>
+                            <td class="align-middle">
+                                <span class="field">@item.Balance</span>
+                            </td>
+                            <td class="align-middle">
+                                <span class="field">@item.ConnectionDate.ToString("d")</span>
+                            </td>
+                            <td class="align-middle">
+                                <span class="field">@item.Tariff.Id</span>
+                            </td>
+                            <td class="align-middle">
+                                <button type="button"
+                                        class="btn btn-primary edit-btn"
+                                        data-toggle="tooltip"
+                                        title="Редагувати запис">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button type="submit"
+                                        class="btn btn-success save-btn"
+                                        style="display: none;"
+                                        data-toggle="tooltip"
+                                        title="Зберегти зміни">
+                                    <i class="bi bi-check-lg"></i>
+                                </button>
+                                <button type="button"
+                                        class="btn btn-warning cancel-btn"
+                                        style="display: none;"
+                                        data-toggle="tooltip"
+                                        title="Відмінити">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                                <button type="submit"
+                                        class="btn btn-primary"
+                                        asp-action="Activities"
+                                        data-toggle="tooltip"
+                                        title="Активність">
+                                    <i class="bi bi-bar-chart"></i>
+                                </button>
+                                <button type="submit"
+                                        class="btn btn-primary"
+                                        asp-action="Services"
+                                        data-toggle="tooltip"
+                                        title="Підключені послуги">
+                                    <i class="bi bi-list-ul"></i>
+                                </button>
+                                <button type="submit"
+                                        class="btn btn-danger"
+                                        asp-action="Delete"
+                                        data-toggle="tooltip"
+                                        title="Видалити запис">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        </form>
+                    }
+                </tbody>
+            </table>
+            @{
+                await Html.RenderPartialAsync("_Pager", pager);
+            }
+        </div>
+        <div class="col-3">
+            <div class="card">
+                <div class="card-header">Додати користувача</div>
+                <div class="card-body">
+                    <form method="post" asp-action="Create">
+                        <div class="form-group">
+                            <label>Ім'я</label>
+                            <input type="text" class="form-control" name="Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Прізвище</label>
+                            <input type="text" class="form-control" name="Surname" required>
+                        </div>
+                        <div class="form-group">
+                            <label>По-батькові</label>
+                            <input type="text" class="form-control" name="MiddleName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Номер телефону</label>
+                            <input type="text" class="form-control" name="PhoneNumber" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Тариф</label>
+                            <select class="form-control" id="category" name="TariffId">
+                                @foreach (var tariff in Model.Tariffs)
+                                {
+                                    <option value="@tariff.Id">@tariff.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Додати</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<partial name="_TableScript" />

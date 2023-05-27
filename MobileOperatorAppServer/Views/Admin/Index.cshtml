@@ -1,0 +1,156 @@
+﻿@{
+    Pager pager = new Pager();
+
+    if (ViewBag.Pager != null)
+    {
+        pager = ViewBag.Pager;
+    }
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Ім'я</th>
+                        <th scope="col">Прізвище</th>
+                        <th scope="col">По-батькові</th>
+                        <th scope="col">Ім'я користувача</th>
+                        <th scope="col">Пароль</th>
+                        <th scope="col">Дії</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <form method="post" asp-action="Update">
+                        <tr>
+                            <th class="align-middle" scope="row">@item.Id</th>
+                            <input type="hidden" name="Id" value="@item.Id" />
+                            <td class="align-middle form-group">
+                                <span class="field">@item.Name</span>
+                                <input class="input-field text-input form-control"
+                                       type="text"
+                                       data-field="Name"
+                                       value="@item.Name"
+                                       style="display:none"
+                                       name="Name"
+                                       required />
+                            </td>
+                            <td class="align-middle form-group">
+                                <span class="field">@item.Surname</span>
+                                <input class="input-field text-input form-control"
+                                       type="text"
+                                       data-field="Surname"
+                                       value="@item.Surname"
+                                       style="display:none"
+                                       name="Surname"
+                                       required />
+                            </td>
+                            <td class="align-middle form-group">
+                                <span class="field">@item.MiddleName</span>
+                                <input class="input-field text-input form-control"
+                                       type="text"
+                                       data-field="MiddleName"
+                                       value="@item.MiddleName"
+                                       style="display:none"
+                                       name="MiddleName"
+                                       required />
+                            </td>
+                            <td class="align-middle form-group">
+                                <span class="field">@item.Username</span>
+                                <input class="input-field text-input form-control"
+                                       type="text"
+                                       data-field="Username"
+                                       value="@item.Username"
+                                       style="display:none"
+                                       name="Username"
+                                       required />
+                            </td>
+                            <td class="align-middle form-group">
+                                <span class="field">@item.Password</span>
+                                <input class="input-field text-input form-control"
+                                       type="text"
+                                       data-field="Password"
+                                       value="@item.Password"
+                                       style="display:none"
+                                       name="Password"
+                                       required />
+                            </td>
+                            <td class="align-middle form-group">
+                                    @if (item.Username != User.Identity.Name)
+                                {
+                                    <button type="button"
+                                            class="btn btn-primary edit-btn"
+                                            data-toggle="tooltip"
+                                            title="Редагувати запис">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button type="submit"
+                                            class="btn btn-success save-btn"
+                                            style="display: none;"
+                                            data-toggle="tooltip"
+                                            title="Зберегти зміни">
+                                        <i class="bi bi-check-lg"></i>
+                                    </button>
+                                    <button type="button"
+                                            class="btn btn-warning cancel-btn"
+                                            style="display: none;"
+                                            data-toggle="tooltip"
+                                            title="Відмінити">
+                                        <i class="bi bi-x-lg"></i>
+                                    </button>
+                                    <button type="submit" 
+                                            class="btn btn-danger" 
+                                            asp-action="Delete"
+                                            data-toggle="tooltip"
+                                            title="Видалити запис">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                }
+                            </td>
+                        </tr>
+                        </form>
+                    }
+                </tbody>
+            </table>
+            @{
+                await Html.RenderPartialAsync("_Pager", pager);
+            }
+            
+        </div>
+        <div class="col-3">
+            <div class="card">
+                <div class="card-header">Додати адміністратора</div>
+                <div class="card-body">
+                    <form method="post" asp-action="Create">
+                        <div class="form-group">
+                            <label>Ім'я</label>
+                            <input type="text" class="form-control" name="Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Прізвище</label>
+                            <input type="text" class="form-control" name="Surname" required>
+                        </div>
+                        <div class="form-group">
+                            <label>По-батькові</label>
+                            <input type="text" class="form-control" name="MiddleName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Ім'я користувача</label>
+                            <input type="text" class="form-control" name="Username" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Пароль</label>
+                            <input type="password" class="form-control" name="Password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Додати</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<partial name="_TableScript"/>
